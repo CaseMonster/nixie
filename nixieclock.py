@@ -25,18 +25,18 @@ GPIO.setup(PIN_CLOCK, GPIO.OUT)
 #functions
 
 def Clock():
-    time.sleep(0.1)
+    time.sleep(0.25)
     GPIO.output(PIN_CLOCK, GPIO.HIGH)
-    time.sleep(0.1)
+    time.sleep(0.25)
     GPIO.output(PIN_CLOCK, GPIO.LOW)
-    time.sleep(0.1)
+    time.sleep(0.25)
 
 def Latch():
-    time.sleep(0.1)
+    time.sleep(0.25)
     GPIO.output(PIN_LATCH, GPIO.HIGH)
-    time.sleep(0.1)
+    time.sleep(0.25)
     GPIO.output(PIN_LATCH, GPIO.LOW)
-    time.sleep(0.1)
+    time.sleep(0.25)
 
 def GetHour():
     now = datetime.datetime.now()
@@ -65,26 +65,49 @@ def ParseLastDigit(digit):
 
 def ConvertTimeToArray(number):
     if number == "0":
-        return [False,False,False,False]
+        return [False,False,True,True]
     if number == "1":
-        return [False,False,False,True]
+        return [False,False,True,True]
     if number == "2":
-        return [False,False,True,False]
+        return [False,False,True,True]
     if number == "3":
         return [False,False,True,True]
     if number == "4":
-        return [False,True,False,False]
+        return [False,False,True,True]
     if number == "5":
-        return [False,True,False,True]
+        return [False,False,True,True]
     if number == "6":
-        return [False,True,True,False]
+        return [False,False,True,True]
     if number == "7":
-        return [False,True,True,True]
+        return [False,False,True,True]
     if number == "8":
-        return [True,False,False,False]
+        return [False,False,True,True]
     if number == "9":
-        return [True,False,False,True]
+        return [False,False,True,True]
     return "error"
+	
+#def ConvertTimeToArray(number):
+#    if number == "0":
+#        return [False,False,False,False]
+#    if number == "1":
+#        return [False,False,False,True]
+#    if number == "2":
+#        return [False,False,True,False]
+#    if number == "3":
+#        return [False,False,True,True]
+#    if number == "4":
+#        return [False,True,False,False]
+#    if number == "5":
+#        return [False,True,False,True]
+#    if number == "6":
+#        return [False,True,True,False]
+#    if number == "7":
+#        return [False,True,True,True]
+#    if number == "8":
+#        return [True,False,False,False]
+#    if number == "9":
+#        return [True,False,False,True]
+#    return "error"
 
 #===========================================================================================
 #main
@@ -102,10 +125,6 @@ while True:
     hours = GetHour()
     mins = GetMinute()
 
-    for val in ConvertTimeToArray(ParseFirstDigit(hours)):
-        GPIO.output(PIN_SERIAL, val)
-        Clock()
-        GPIO.output(PIN_SERIAL, GPIO.LOW)
     for val in ConvertTimeToArray(ParseLastDigit(mins)):
         GPIO.output(PIN_SERIAL, val)
         Clock()
@@ -115,6 +134,10 @@ while True:
         Clock()
         GPIO.output(PIN_SERIAL, GPIO.LOW)
     for val in ConvertTimeToArray(ParseLastDigit(hours)):
+        GPIO.output(PIN_SERIAL, val)
+        Clock()
+        GPIO.output(PIN_SERIAL, GPIO.LOW)
+    for val in ConvertTimeToArray(ParseFirstDigit(hours)):
         GPIO.output(PIN_SERIAL, val)
         Clock()
         GPIO.output(PIN_SERIAL, GPIO.LOW)
